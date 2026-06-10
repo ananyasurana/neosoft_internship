@@ -1,0 +1,69 @@
+def flatten_typed(nested):
+
+    buckets = {
+        "integers": set(),
+        "floats": set(),
+        "strings": set(),
+        "booleans": set()
+    }
+
+    # recursive function to go through nested lists
+    def helper(items):
+
+        for item in items:
+
+            if isinstance(item, list):
+                helper(item)
+
+            # bool check has to come first
+            elif isinstance(item, bool):
+                buckets["booleans"].add(item)
+
+            elif isinstance(item, int):
+                buckets["integers"].add(item)
+
+            elif isinstance(item, float):
+                buckets["floats"].add(item)
+
+            elif isinstance(item, str):
+                buckets["strings"].add(item)
+
+            else:
+                raise TypeError(
+                    f"Unsupported type: {type(item).__name__}"
+                )
+
+    helper(nested)
+
+    result = {}
+
+    # convert sets to sorted lists
+    for key, values in buckets.items():
+
+        if values:
+            result[key] = sorted(values)
+
+    return result
+
+
+# Test 1
+test1 = [1, [2, [3, 2]], 1, [4]]
+print("Test 1:", flatten_typed(test1))
+
+# Test 2
+test2 = [3, ["apple", 1.5],
+         ["apple", [2, 1.5, "banana"]]]
+print("Test 2:", flatten_typed(test2))
+
+# Test 3
+test3 = [True, 1, False,
+         [True, 0, [2, False]]]
+print("Test 3:", flatten_typed(test3))
+
+# Test 4
+test4 = [1, [2, {"key": "val"}]]
+
+try:
+    print("Test 4:", flatten_typed(test4))
+except TypeError as error:
+    print("Error:", error)
