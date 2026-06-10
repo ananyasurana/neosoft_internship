@@ -1,0 +1,17 @@
+class soln:
+    def twoSum(self, nums, target):
+        # Stores numbers seen & indices
+        previous_values = {}
+
+        for idx, value in enumerate(nums):
+            # calculating the value we need to reach the target
+            required = target - value
+
+            #case for return both indices
+            if required in previous_values:
+                return [previous_values[required], idx]
+
+            # Store the current value and its index
+            previous_values[value] = idx
+
+return []
